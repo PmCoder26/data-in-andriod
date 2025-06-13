@@ -29,4 +29,10 @@ interface StudentDao {
     @Query(value = "SELECT * FROM students")
     fun getAllStudentsWithSubjects(): Flow<List<StudentWithSubjects>>
 
+    @Query(value = "SELECT * FROM students")
+    fun getAllStudentsWithAddress(): Flow<List<StudentWithSubjects>>
+
+    @Query(value = "SELECT EXISTS(SELECT studentId FROM students WHERE studentId = :studentId LIMIT 1)")
+    fun studentAlreadyExists(studentId: Long): Boolean
+
 }
