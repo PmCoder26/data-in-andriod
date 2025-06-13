@@ -1,6 +1,7 @@
 package com.example.data_in_android_practice.room_database.database
 
 import androidx.room.Database
+import androidx.room.RoomDatabase
 import com.example.data_in_android_practice.room_database.dao.AddressDao
 import com.example.data_in_android_practice.room_database.dao.ClassDao
 import com.example.data_in_android_practice.room_database.dao.StudentDao
@@ -22,7 +23,7 @@ import com.example.data_in_android_practice.room_database.entity.Subject
     ],
     version = 1
 )
-abstract class RoomDatabaseClass {
+abstract class RoomDatabaseClass : RoomDatabase() {
 
     abstract val addressDao: AddressDao
 
