@@ -51,7 +51,7 @@ class RoomDatabaseViewModel(
             classes = classes,
             classesWithStudents = classesWithStudents
         )
-    }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), StudentsAndClassesState())
 
     val classAndStudentsState = combine(currentClass, classesWithStudents, classWithStudentsState) { currentClass, classesWithStudents, classWithStudentState ->
         var students: List<Student> = emptyList()
