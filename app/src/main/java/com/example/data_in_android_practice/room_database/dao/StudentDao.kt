@@ -15,13 +15,13 @@ import kotlinx.coroutines.flow.Flow
 interface StudentDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertStudent(student: Student)
+    suspend fun insertStudent(student: Student)
 
     @Delete
-    fun deleteStudent(student: Student)
+    suspend fun deleteStudent(student: Student)
 
     @Update(onConflict = OnConflictStrategy.ABORT)
-    fun updateStudent(student: Student)
+    suspend fun updateStudent(student: Student)
 
     @Query(value = "SELECT * FROM students")
     fun getAllStudents(): Flow<List<Student>>
@@ -29,10 +29,7 @@ interface StudentDao {
     @Query(value = "SELECT * FROM students")
     fun getAllStudentsWithSubjects(): Flow<List<StudentWithSubjects>>
 
-    @Query(value = "SELECT * FROM students")
-    fun getAllStudentsWithAddress(): Flow<List<StudentWithSubjects>>
-
     @Query(value = "SELECT EXISTS(SELECT studentId FROM students WHERE studentId = :studentId LIMIT 1)")
-    fun studentAlreadyExists(studentId: Long): Boolean
+    suspend fun studentAlreadyExists(studentId: Long): Boolean
 
 }

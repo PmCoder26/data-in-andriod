@@ -12,7 +12,7 @@ import com.example.data_in_android_practice.room_database.entity.Address
 interface AddressDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertAddress(address: Address)
+    fun insertAddress(address: Address): Long       // by default returns id.
 
     @Delete
     fun deleteAddress(address: Address)

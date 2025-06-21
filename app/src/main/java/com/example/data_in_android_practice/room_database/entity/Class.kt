@@ -10,6 +10,6 @@ import androidx.room.PrimaryKey
     indices = [Index(value = ["className"], unique = true)]
 )
 data class Class(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val className: String = "A"
 )

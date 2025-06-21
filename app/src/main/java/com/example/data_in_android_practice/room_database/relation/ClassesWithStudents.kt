@@ -5,12 +5,12 @@ import androidx.room.Relation
 import com.example.data_in_android_practice.room_database.entity.Class
 import com.example.data_in_android_practice.room_database.entity.Student
 
-data class StudentWithClass (
+data class  ClassesWithStudents (
     @Embedded
-    val student: Student,
+    val classItem: Class,
     @Relation(
         parentColumn = "className",
         entityColumn = "className"
     )
-    val studentClass: Class
+    val students: List<Student>
 )
