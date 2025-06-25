@@ -12,13 +12,13 @@ import com.example.data_in_android_practice.room_database.entity.Address
 interface AddressDao {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertAddress(address: Address): Long       // by default returns id.
+    suspend fun insertAddress(address: Address): Long       // by default returns id.
 
     @Delete
-    fun deleteAddress(address: Address)
+    suspend fun deleteAddress(address: Address)
 
     @Update(onConflict = OnConflictStrategy.ABORT)
-    fun updateAddress(address: Address)
+    suspend fun updateAddress(address: Address)
 
 
 }

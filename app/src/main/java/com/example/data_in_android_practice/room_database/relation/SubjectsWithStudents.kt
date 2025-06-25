@@ -8,19 +8,13 @@ import com.example.data_in_android_practice.room_database.entity.StudentSubjectC
 import com.example.data_in_android_practice.room_database.entity.Subject
 
 
-data class StudentWithSubjects(
+data class SubjectsWithStudents(
     @Embedded
-    val student: Student = Student(
-        name = "",
-        age = 0,
-        gender = "",
-        addressId = 0,
-        className = ""
-    ),
+    val subject: Subject,
     @Relation(
-        parentColumn = "studentId",
-        entityColumn = "subjectId",
+        parentColumn = "subjectId",
+        entityColumn = "studentId",
         associateBy = Junction(StudentSubjectCrossRef::class)
     )
-    val subjects: List<Subject> = emptyList()
+    val students: List<Student>
 )

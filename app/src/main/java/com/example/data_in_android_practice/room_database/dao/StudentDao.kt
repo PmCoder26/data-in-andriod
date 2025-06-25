@@ -32,4 +32,7 @@ interface StudentDao {
     @Query(value = "SELECT EXISTS(SELECT studentId FROM students WHERE studentId = :studentId LIMIT 1)")
     suspend fun studentAlreadyExists(studentId: Long): Boolean
 
+    @Query(value = "SELECT * FROM students WHERE studentId = :studentId")
+    fun getStudentWithSubjectsById(studentId: Long): StudentWithSubjects
+
 }

@@ -4,17 +4,32 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavArgument
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.room.Room
 import com.example.data_in_android_practice.room_database.RoomDatabaseHome
+import com.example.data_in_android_practice.room_database.StudentDetailsScreen
 import com.example.data_in_android_practice.room_database.database.RoomDatabaseClass
+import com.example.data_in_android_practice.room_database.entity.Student
+import com.example.data_in_android_practice.room_database.relation.StudentWithSubjects
 import com.example.data_in_android_practice.room_database.viewmodel.RoomDatabaseViewModel
 import com.example.data_in_android_practice.room_database.viewmodel.RoomDatabaseViewModelFactory
 import com.example.data_in_android_practice.ui.theme.Data_in_Android_PracticeTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.getValue
 
 class MainActivity : ComponentActivity() {
@@ -38,23 +53,46 @@ class MainActivity : ComponentActivity() {
                     NavRoute("Room Database", "RoomDatabaseHome")
                 )
 
+                val viewModel: RoomDatabaseViewModel = viewModel(
+                    factory = RoomDatabaseViewModelFactory(
+                        addressDao = database.addressDao,
+                        classDao = database.classDao,
+                        studentDao = database.studentDao,
+                        studentSubjectsRefDao = database.studentSubjectsRefDao,
+                        subjectDao = database.subjectDao
+                    )
+                )
+
                 NavHost(navController = navCon, startDestination = "NavRouteGallery") {
                     composable(route = "NavRouteGallery") {
                         NavRouteGallery(navRouteList, navCon)
                     }
 
                     composable("RoomDatabaseHome") {
-                        val viewModel: RoomDatabaseViewModel = viewModel(
-                            factory = RoomDatabaseViewModelFactory(
-                                addressDao = database.addressDao,
-                                classDao = database.classDao,
-                                studentDao = database.studentDao,
-                                studentSubjectsRefDao = database.studentSubjectsRefDao,
-                                subjectDao = database.subjectDao
-                            )
-                        )
+                        RoomDatabaseHome(viewModel, navCon)
+                    }
 
-                        RoomDatabaseHome(viewModel)
+                    composable(
+                        route = "StudentDetailsScreen/{studentId}",
+                        arguments = listOf(
+                            navArgument("studentId") {
+                                this.type = NavType.LongType
+                                nullable = false
+                            }
+                        )
+                    ) {
+                        var studentWithSubjects by remember {
+                            mutableStateOf(StudentWithSubjects())
+
+                        }
+                        LaunchedEffect(Unit) {
+                            launch(Dispatchers.IO) {
+                                val studentId = it.arguments?.getLong("studentId")!!
+                                studentWithSubjects = viewModel.getStudentWithSubjects(studentId)
+                            }
+                        }
+
+                        StudentDetailsScreen(studentWithSubjects, viewModel)
                     }
 
                 }

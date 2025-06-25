@@ -11,13 +11,13 @@ import com.example.data_in_android_practice.room_database.entity.StudentSubjectC
 @Dao
 interface StudentSubjectsRefDao {
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    fun insertStudentSubjectCrossRef(StudentSubjectCrossRef: StudentSubjectCrossRef)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertStudentSubjectCrossRef(StudentSubjectCrossRef: StudentSubjectCrossRef)
 
     @Delete
-    fun deleteStudentSubjectCrossRef(StudentSubjectCrossRef: StudentSubjectCrossRef)
+    suspend fun deleteStudentSubjectCrossRef(StudentSubjectCrossRef: StudentSubjectCrossRef)
 
-    @Update(onConflict = OnConflictStrategy.ABORT)
-    fun updateStudentSubjectCrossRef(StudentSubjectCrossRef: StudentSubjectCrossRef)
+    @Update(onConflict = OnConflictStrategy.NONE)
+    suspend fun updateStudentSubjectCrossRef(StudentSubjectCrossRef: StudentSubjectCrossRef)
 
 }
