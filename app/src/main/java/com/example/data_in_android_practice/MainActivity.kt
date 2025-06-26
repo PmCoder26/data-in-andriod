@@ -3,27 +3,23 @@ package com.example.data_in_android_practice
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavArgument
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.room.Room
+import com.example.data_in_android_practice.datastore.DataStoreHomeScreen
+import com.example.data_in_android_practice.datastore.DatastoreViewModel
 import com.example.data_in_android_practice.room_database.RoomDatabaseHome
 import com.example.data_in_android_practice.room_database.StudentDetailsScreen
 import com.example.data_in_android_practice.room_database.database.RoomDatabaseClass
-import com.example.data_in_android_practice.room_database.entity.Student
 import com.example.data_in_android_practice.room_database.relation.StudentWithSubjects
 import com.example.data_in_android_practice.room_database.viewmodel.RoomDatabaseViewModel
 import com.example.data_in_android_practice.room_database.viewmodel.RoomDatabaseViewModelFactory
@@ -50,7 +46,8 @@ class MainActivity : ComponentActivity() {
             Data_in_Android_PracticeTheme {
                 val navCon = rememberNavController()
                 val navRouteList = listOf(
-                    NavRoute("Room Database", "RoomDatabaseHome")
+                    NavRoute("Room Database", "RoomDatabaseHome"),
+                    NavRoute("Datastore", "DataStoreHomeScreen")
                 )
 
                 val viewModel: RoomDatabaseViewModel = viewModel(
@@ -67,6 +64,8 @@ class MainActivity : ComponentActivity() {
                     composable(route = "NavRouteGallery") {
                         NavRouteGallery(navRouteList, navCon)
                     }
+
+                    // Room database composables.
 
                     composable("RoomDatabaseHome") {
                         RoomDatabaseHome(viewModel, navCon)
@@ -93,6 +92,15 @@ class MainActivity : ComponentActivity() {
                         }
 
                         StudentDetailsScreen(studentWithSubjects, viewModel)
+                    }
+
+                    // Datastore composables.
+                    composable("DataStoreHomeScreen") {
+                        val viewModel: DatastoreViewModel = viewModel()
+                        LaunchedEffect(Unit) {
+                            viewModel.getPersonalInfo(this@MainActivity)
+                        }
+                        DataStoreHomeScreen(viewModel)
                     }
 
                 }

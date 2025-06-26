@@ -1,4 +1,4 @@
-[versions]
+    [versions]
 agp = "8.10.1"
 kotlin = "2.0.21"
 coreKtx = "1.10.1"
@@ -10,6 +10,12 @@ activityCompose = "1.8.0"
 composeBom = "2024.09.00"
 navigationRuntimeAndroid = "2.9.0"
 navigationCompose = "2.7.7"
+
+# Room database configs.
+room = "2.6.1"
+
+# Datastrore configs.
+datastore = "1.1.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -28,6 +34,21 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-navigation-runtime-android = { group = "androidx.navigation", name = "navigation-runtime-android", version.ref = "navigationRuntimeAndroid" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+
+# Room database configs.
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group  = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-rxjava2 = { group = "androidx.room", name = "room-rxjava2", version.ref = "room" }
+room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", version.ref = "room" }
+room-guava = { group = "androidx.room", name = "room-guava", version.ref = "room" }
+room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+
+# Datastore configs.
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore" }
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
