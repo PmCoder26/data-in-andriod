@@ -1,9 +1,11 @@
 package com.example.data_in_android_practice
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +25,10 @@ import com.example.data_in_android_practice.room_database.database.RoomDatabaseC
 import com.example.data_in_android_practice.room_database.relation.StudentWithSubjects
 import com.example.data_in_android_practice.room_database.viewmodel.RoomDatabaseViewModel
 import com.example.data_in_android_practice.room_database.viewmodel.RoomDatabaseViewModelFactory
+import com.example.data_in_android_practice.storage.StorageHomeScreen
+import com.example.data_in_android_practice.storage.internal.InternalStorageHomeScreen
+import com.example.data_in_android_practice.storage.internal.PhotosHomeScreen
+import com.example.data_in_android_practice.storage.internal.viewmodel.PhotosViewModel
 import com.example.data_in_android_practice.ui.theme.Data_in_Android_PracticeTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,7 +44,6 @@ class MainActivity : ComponentActivity() {
         ).build()
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -47,7 +52,8 @@ class MainActivity : ComponentActivity() {
                 val navCon = rememberNavController()
                 val navRouteList = listOf(
                     NavRoute("Room Database", "RoomDatabaseHome"),
-                    NavRoute("Datastore", "DataStoreHomeScreen")
+                    NavRoute("Datastore", "DataStoreHomeScreen"),
+                    NavRoute("Internal Storage", "InternalStorageHomeScreen")
                 )
 
                 val viewModel: RoomDatabaseViewModel = viewModel(
@@ -65,8 +71,8 @@ class MainActivity : ComponentActivity() {
                         NavRouteGallery(navRouteList, navCon)
                     }
 
-                    // Room database composables.
 
+                    // Room database composables.
                     composable("RoomDatabaseHome") {
                         RoomDatabaseHome(viewModel, navCon)
                     }
@@ -94,13 +100,34 @@ class MainActivity : ComponentActivity() {
                         StudentDetailsScreen(studentWithSubjects, viewModel)
                     }
 
+
                     // Datastore composables.
                     composable("DataStoreHomeScreen") {
-                        val viewModel: DatastoreViewModel = viewModel()
+                        val viewModel = viewModel<DatastoreViewModel>()
                         LaunchedEffect(Unit) {
                             viewModel.getPersonalInfo(this@MainActivity)
                         }
                         DataStoreHomeScreen(viewModel)
+                    }
+
+                    // Storage composables.
+                    composable("StorageHomeScreen") {
+                        StorageHomeScreen(navCon)
+                    }
+
+                    composable("InternalStorageHomeScreen") {
+                        InternalStorageHomeScreen(navCon)
+                    }
+                    composable("PhotosHomeScreen") {
+                        val photosViewModel = viewModel<PhotosViewModel>()
+
+                        val photosState by photosViewModel.photosState.collectAsState()
+
+                        LaunchedEffect(Unit) {
+                            photosViewModel.initializePhotos(this@MainActivity)
+                        }
+
+                        PhotosHomeScreen(photosViewModel)
                     }
 
                 }

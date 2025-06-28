@@ -85,5 +85,8 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.datastore.preferences.core)
 
+    // AsyncImage dependencies.
+//    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation(libs.coil.compose)
 
 }
