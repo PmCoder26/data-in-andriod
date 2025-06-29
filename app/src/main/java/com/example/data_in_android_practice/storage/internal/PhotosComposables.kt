@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.data_in_android_practice.storage.internal.dto.Photo
 import com.example.data_in_android_practice.storage.internal.viewmodel.PhotosViewModel
@@ -127,6 +128,8 @@ fun PhotosHomeScreen(photosViewModel: PhotosViewModel) {
             horizontalArrangement = Arrangement.Center
         ) {
             items(photosState) { photo ->
+                // AsyncImage internally uses the rememberAsyncImagePainter(), boosting the
+                // performance across recompositions.
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(photo.uri)
