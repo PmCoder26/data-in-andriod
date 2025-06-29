@@ -1,16 +1,20 @@
 package com.example.data_in_android_practice
 
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.OptIn
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,13 +30,19 @@ import com.example.data_in_android_practice.room_database.relation.StudentWithSu
 import com.example.data_in_android_practice.room_database.viewmodel.RoomDatabaseViewModel
 import com.example.data_in_android_practice.room_database.viewmodel.RoomDatabaseViewModelFactory
 import com.example.data_in_android_practice.storage.StorageHomeScreen
-import com.example.data_in_android_practice.storage.internal.InternalStorageHomeScreen
-import com.example.data_in_android_practice.storage.internal.PhotosHomeScreen
+import com.example.data_in_android_practice.storage.internal.ui.InternalStorageHomeScreen
+import com.example.data_in_android_practice.storage.internal.ui.PhotosHomeScreen
+import com.example.data_in_android_practice.storage.internal.ui.VideosHomeScreen
+import com.example.data_in_android_practice.storage.internal.ui.VideoPlaybackScreen
 import com.example.data_in_android_practice.storage.internal.viewmodel.PhotosViewModel
+import com.example.data_in_android_practice.storage.internal.viewmodel.VideosViewModel
 import com.example.data_in_android_practice.ui.theme.Data_in_Android_PracticeTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.getValue
+import androidx.core.net.toUri
+import androidx.media3.common.MediaItem
+import androidx.media3.session.MediaSession
 
 class MainActivity : ComponentActivity() {
 
@@ -44,6 +54,7 @@ class MainActivity : ComponentActivity() {
         ).build()
     }
 
+    @OptIn(UnstableApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -121,13 +132,57 @@ class MainActivity : ComponentActivity() {
                     composable("PhotosHomeScreen") {
                         val photosViewModel = viewModel<PhotosViewModel>()
 
-                        val photosState by photosViewModel.photosState.collectAsState()
-
                         LaunchedEffect(Unit) {
                             photosViewModel.initializePhotos(this@MainActivity)
                         }
 
                         PhotosHomeScreen(photosViewModel)
+                    }
+                    composable("VideosHomeScreen") {
+                        val videosViewModel = viewModel<VideosViewModel>()
+
+                        LaunchedEffect(Unit) {
+                            videosViewModel.initializeVideos(this@MainActivity)
+                        }
+
+                        VideosHomeScreen(videosViewModel, navCon)
+                    }
+                    composable(
+                        route = "VideoPlaybackScreen/{encodedVideoUri}",
+                        arguments = listOf(
+                            navArgument("encodedVideoUri") {
+                                type = NavType.StringType
+                                nullable = false
+                            }
+                        )
+                    ) {
+                        val encodedVideoUri = it.arguments?.getString("encodedVideoUri")!!
+                        val videoUri = encodedVideoUri.toUri()  // similar to Uri.decode()
+
+                        val exoPlayer = remember {
+                            ExoPlayer.Builder(this@MainActivity)
+                                .setName("MyVideoPlayer")
+                                .build()
+                        }
+                        val mediaSession = remember {       // optional, only for extra functionality.
+                            MediaSession.Builder(this@MainActivity, exoPlayer)
+                                .build()
+                        }
+
+                        val mediaItem = MediaItem.fromUri(videoUri)
+                        exoPlayer.setMediaItem(mediaItem)
+
+                        DisposableEffect(Unit) {
+                            // Release when Composable leaves composition
+                            onDispose {
+                                println("Released the exoPlayer...")
+                                exoPlayer.release()
+                                mediaSession.release()
+                            }
+                        }
+
+
+                        VideoPlaybackScreen(exoPlayer)
                     }
 
                 }

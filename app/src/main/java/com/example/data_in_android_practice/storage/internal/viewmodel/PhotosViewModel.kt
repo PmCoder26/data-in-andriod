@@ -36,7 +36,7 @@ class PhotosViewModel() : ViewModel() {
                 ?.filter { it.extension.lowercase() in listOf("jpg", "jpeg", "png", "webp") }
                 ?.map { Photo(it.name, Uri.fromFile(it)) }
                 ?: emptyList()
-            _photos.value = photoList as MutableList<Photo>
+            _photos.value = photoList as MutableList
         }
     }
 
@@ -75,7 +75,7 @@ class PhotosViewModel() : ViewModel() {
                 Log.e("Photo deletion error: ", "Photo directory doesn't exists!")
                 return@launch
             }
-            val targetFile = File(photoUri.path!!)
+            val targetFile = File(photoUri.path.toString())
             if(targetFile.exists() && targetFile.isFile) {
                 val deleted = targetFile.delete()
                 if(deleted) {

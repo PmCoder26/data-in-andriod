@@ -1,4 +1,4 @@
-package com.example.data_in_android_practice.storage.internal
+package com.example.data_in_android_practice.storage.internal.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -75,7 +75,8 @@ fun InternalStorageHomeScreen(navCon: NavHostController) {
     ) { innerPadding ->
 
         val navRouteList = listOf(
-            NavRoute("Photos", "PhotosHomeScreen")
+            NavRoute("Photos", "PhotosHomeScreen"),
+            NavRoute("Videos", "VideosHomeScreen"),
         )
 
         LazyVerticalGrid(

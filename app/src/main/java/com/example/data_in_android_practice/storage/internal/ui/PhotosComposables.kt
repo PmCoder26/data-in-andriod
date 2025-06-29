@@ -1,4 +1,4 @@
-package com.example.data_in_android_practice.storage.internal
+package com.example.data_in_android_practice.storage.internal.ui
 
 import android.R
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.data_in_android_practice.storage.internal.dto.Photo
 import com.example.data_in_android_practice.storage.internal.viewmodel.PhotosViewModel
